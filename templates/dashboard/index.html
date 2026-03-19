@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Панель — Heracles Coach{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+    <div class="app-bg"></div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="app-header-left">
+            <div class="avatar">{{ user_initial }}</div>
+            <div class="app-header-info">
+                <h2>{{ user.email|truncatechars:20 }}</h2>
+                <div class="status">{{ metrics.recovery_score }}% восстановление</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div style="position: relative;">
+                <button class="icon-btn" id="notifBell" aria-label="Уведомления">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                    <span class="notif-badge {% if unread_count == 0 %}hidden{% endif %}" id="notifBadge">{{ unread_count }}</span>
+                </button>
+                <!-- Notification dropdown -->
+                <div class="notif-dropdown" id="notifDropdown">
+                    <div class="notif-dropdown-header">
+                        <h3>Уведомления</h3>
+                        <button id="markAllRead">Прочитать все</button>
+                    </div>
+                    <div class="notif-list" id="notifList">
+                        <div class="notif-empty">Загрузка...</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{% url 'accounts:profile' %}" class="icon-btn" aria-label="Профиль">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+
+        {% if is_default %}
+        <div class="default-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Показаны средние значения
+        </div>
+        {% endif %}
+
+        <!-- Recovery Score Card -->
+        <div class="glass-card">
+            <div class="recovery-card-header">
+                <div class="recovery-card-header-left">
+                    <div class="metric-icon green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <span style="color: white; font-weight: 500;">Recovery Score</span>
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <div class="recovery-body">
+                <!-- Circular progress -->
+                <div class="circular-progress">
+                    <svg viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="url(#recoveryGrad)" stroke-width="8"
+                                stroke-linecap="round"
+                                stroke-dasharray="{{ recovery_circumference }}"
+                                stroke-dashoffset="{{ recovery_offset }}"/>
+                        <defs>
+                            <linearGradient id="recoveryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#22c55e"/>
+                                <stop offset="100%" stop-color="#10b981"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="circular-progress-value">{{ metrics.recovery_score }}</div>
+                </div>
+
+                <div class="recovery-trend">
+                    <div class="label">7-day trend</div>
+                    <canvas id="recoveryChart" class="sparkline-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleep & Strain -->
+        <div class="metrics-grid">
+            <div class="glass-card small-metric">
+                <div class="metric-header">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    </div>
+                    <span>Sleep</span>
+                </div>
+                <div class="metric-value">{{ metrics.sleep_hours }}h</div>
+                <canvas id="sleepChart" class="sparkline-canvas"></canvas>
+            </div>
+
+            <div class="glass-card small-metric">
+                <div class="metric-header">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <span>Strain</span>
+                </div>
+                <div class="metric-value">{{ metrics.strain_level }}</div>
+                <canvas id="strainChart" class="sparkline-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="status-banner">
+            <div class="metric-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div>
+                <h4>Ready to perform</h4>
+                <p>You are ready for a moderate workout today</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Section (bottom half) -->
+    <div class="chat-section">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome message -->
+            <div class="chat-message bot">
+                <div class="chat-bubble">
+                    Привет! 👋 Ваш recovery score сегодня <strong>{{ metrics.recovery_score }}%</strong>. Вы готовы к высокоинтенсивной тренировке. Задайте мне вопрос!
+                </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="chat-message bot typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-suggestions">
+            <button class="suggestion-btn" data-q="Что мне съесть сегодня?">What should I eat?</button>
+            <button class="suggestion-btn" data-q="Могу ли я тренироваться сегодня?">Can I train today?</button>
+            <button class="suggestion-btn" data-q="Как улучшить сон?">Improve sleep</button>
+        </div>
+
+        <form class="chat-input-bar" id="chatForm">
+            {% csrf_token %}
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask your coach..." autocomplete="off">
+            <button type="submit" class="chat-send-btn" id="sendBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/charts.js' %}"></script>
+<script src="{% static 'js/chat.js' %}"></script>
+<script src="{% static 'js/notifications.js' %}"></script>
+<script>
+    // Draw sparkline charts with trend data
+    const trends = {{ trends_json|safe }};
+    document.addEventListener('DOMContentLoaded', function() {
+        drawSparkline('recoveryChart', trends.recovery, 'rgb(34, 197, 94)');
+        drawSparkline('sleepChart', trends.sleep, 'rgb(59, 130, 246)');
+        drawSparkline('strainChart', trends.strain, 'rgb(168, 85, 247)');
+    });
+</script>
+{% endblock %}
+

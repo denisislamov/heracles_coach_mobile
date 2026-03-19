@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}AI Коуч — Heracles Coach{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+    <div class="app-bg"></div>
+
+    <!-- Header -->
+    <div class="chat-page-header">
+        <div>
+            <h2>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                AI Коуч
+            </h2>
+            <small>Задавайте вопросы о питании, тренировках и здоровье</small>
+        </div>
+        <a href="{% url 'dashboard:index' %}" class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </a>
+    </div>
+
+    <!-- Chat body -->
+    <div class="chat-page-body">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome -->
+            <div class="chat-message bot">
+                <div class="chat-bubble">
+                    Привет! 👋 Я ваш AI коуч по здоровью. Могу помочь с вопросами о:
+                    <br><br>
+                    🏋️ Тренировках и упражнениях<br>
+                    🥗 Питании и диете<br>
+                    😴 Сне и восстановлении<br>
+                    💊 Общем здоровье
+                </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="chat-message bot typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-suggestions">
+            <button class="suggestion-btn" data-q="Какие упражнения для спины?">Упражнения для спины</button>
+            <button class="suggestion-btn" data-q="Сколько воды нужно пить в день?">Норма воды</button>
+            <button class="suggestion-btn" data-q="Как улучшить сон?">Улучшить сон</button>
+            <button class="suggestion-btn" data-q="Составь план тренировки на неделю">План тренировки</button>
+        </div>
+
+        <form class="chat-input-bar" id="chatForm">
+            {% csrf_token %}
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask your coach..." autocomplete="off">
+            <button type="submit" class="chat-send-btn" id="sendBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/chat.js' %}"></script>
+<script src="{% static 'js/notifications.js' %}"></script>
+{% endblock %}
+

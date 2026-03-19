@@ -1,0 +1,31 @@
+{% extends "allauth/layouts/base.html" %}
+{% load static %}
+
+{% block head_title %}Выход — Heracles Coach{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-bg"></div>
+    <div class="auth-blur"></div>
+
+    <div class="auth-container">
+        <div class="auth-logo">
+            <div class="auth-logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h1>Выход</h1>
+            <p>Вы уверены, что хотите выйти?</p>
+        </div>
+
+        <form method="POST" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">Выйти</button>
+        </form>
+
+        <div class="auth-footer">
+            <a href="{% url 'dashboard:index' %}">Вернуться на панель</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
