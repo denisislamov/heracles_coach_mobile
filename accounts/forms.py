@@ -11,12 +11,12 @@ class CustomUserCreationForm(UserCreationForm):
     }))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'auth-input',
-        'placeholder': 'Пароль',
+        'placeholder': 'Password',
         'autocomplete': 'new-password',
     }))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'auth-input',
-        'placeholder': 'Подтвердите пароль',
+        'placeholder': 'Confirm password',
         'autocomplete': 'new-password',
     }))
 
@@ -38,8 +38,7 @@ class ProfileForm(forms.ModelForm):
         fields = ('date_of_birth', 'height_cm', 'weight_kg', 'notifications_enabled')
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'auth-input'}),
-            'height_cm': forms.NumberInput(attrs={'class': 'auth-input', 'placeholder': 'Рост в см'}),
-            'weight_kg': forms.NumberInput(attrs={'class': 'auth-input', 'placeholder': 'Вес в кг'}),
+            'height_cm': forms.NumberInput(attrs={'class': 'auth-input', 'placeholder': 'Height in cm'}),
+            'weight_kg': forms.NumberInput(attrs={'class': 'auth-input', 'placeholder': 'Weight in kg'}),
             'notifications_enabled': forms.CheckboxInput(attrs={'class': 'toggle-checkbox'}),
         }
-

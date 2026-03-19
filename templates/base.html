@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,15 +22,15 @@
     <nav class="bottom-nav">
         <a href="{% url 'dashboard:index' %}" class="{% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Панель</span>
+            <span>Dashboard</span>
         </a>
         <a href="{% url 'chatbot:chat' %}" class="{% if request.resolver_match.app_name == 'chatbot' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            <span>AI Коуч</span>
+            <span>AI Coach</span>
         </a>
         <a href="{% url 'accounts:profile' %}" class="{% if request.resolver_match.app_name == 'accounts' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Профиль</span>
+            <span>Profile</span>
         </a>
     </nav>
     {% endif %}

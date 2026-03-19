@@ -3,11 +3,11 @@ from django.conf import settings
 
 
 SYSTEM_PROMPT = (
-    "Ты — Heracles Coach, профессиональный AI-коуч по здоровью и фитнесу. "
-    "Ты помогаешь пользователям с вопросами о питании, тренировках, сне, "
-    "восстановлении и общем самочувствии. Отвечай на русском языке, кратко и по делу. "
-    "Используй эмодзи для большей выразительности. "
-    "Если вопрос не связан со здоровьем, вежливо перенаправь разговор к теме здоровья."
+    "You are Heracles Coach, a professional AI health and fitness coach. "
+    "You help users with questions about nutrition, workouts, sleep, "
+    "recovery, and overall well-being. Answer concisely and to the point. "
+    "Use emojis for expressiveness. "
+    "If the question is not related to health, politely redirect the conversation to health topics."
 )
 
 
@@ -18,8 +18,8 @@ def query_huggingface(user_message: str, conversation_history: list = None) -> s
     """
     api_token = settings.HUGGINGFACE_API_TOKEN
     if not api_token:
-        return ("⚠️ API токен HuggingFace не настроен. "
-                "Добавьте HUGGINGFACE_API_TOKEN в переменные окружения.")
+        return ("⚠️ HuggingFace API token is not configured. "
+                "Add HUGGINGFACE_API_TOKEN to your environment variables.")
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
@@ -54,18 +54,18 @@ def query_huggingface(user_message: str, conversation_history: list = None) -> s
             generated = result[0].get('generated_text', '').strip()
             if '[/INST]' in generated:
                 generated = generated.split('[/INST]')[-1].strip()
-            return generated if generated else "Извините, не удалось получить ответ. Попробуйте ещё раз."
+            return generated if generated else "Sorry, couldn't get a response. Please try again."
 
-        return "Извините, не удалось получить ответ. Попробуйте ещё раз."
+        return "Sorry, couldn't get a response. Please try again."
 
     except requests.exceptions.Timeout:
-        return "⏳ Модель загружается, попробуйте через 20-30 секунд..."
+        return "⏳ Model is loading, please try again in 20-30 seconds..."
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 503:
-            return "⏳ Модель загружается, попробуйте через 20-30 секунд..."
-        return f"Ошибка API: {e.response.status_code}"
+            return "⏳ Model is loading, please try again in 20-30 seconds..."
+        return f"API error: {e.response.status_code}"
     except Exception as e:
-        return f"Произошла ошибка: {str(e)}"
+        return f"An error occurred: {str(e)}"
 
 
 def _format_messages_for_mistral(messages: list) -> str:

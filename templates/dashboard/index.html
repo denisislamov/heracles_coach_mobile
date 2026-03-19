@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Панель — Heracles Coach{% endblock %}
+{% block title %}Dashboard — Heracles Coach{% endblock %}
 
 {% block content %}
 <div class="app-shell">
@@ -12,27 +12,27 @@
             <div class="avatar">{{ user_initial }}</div>
             <div class="app-header-info">
                 <h2>{{ user.email|truncatechars:20 }}</h2>
-                <div class="status">{{ metrics.recovery_score }}% восстановление</div>
+                <div class="status">{{ metrics.recovery_score }}% recovery</div>
             </div>
         </div>
         <div class="header-actions">
             <div style="position: relative;">
-                <button class="icon-btn" id="notifBell" aria-label="Уведомления">
+                <button class="icon-btn" id="notifBell" aria-label="Notifications">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
                     <span class="notif-badge {% if unread_count == 0 %}hidden{% endif %}" id="notifBadge">{{ unread_count }}</span>
                 </button>
                 <!-- Notification dropdown -->
                 <div class="notif-dropdown" id="notifDropdown">
                     <div class="notif-dropdown-header">
-                        <h3>Уведомления</h3>
-                        <button id="markAllRead">Прочитать все</button>
+                        <h3>Notifications</h3>
+                        <button id="markAllRead">Mark all read</button>
                     </div>
                     <div class="notif-list" id="notifList">
-                        <div class="notif-empty">Загрузка...</div>
+                        <div class="notif-empty">Loading...</div>
                     </div>
                 </div>
             </div>
-            <a href="{% url 'accounts:profile' %}" class="icon-btn" aria-label="Профиль">
+            <a href="{% url 'accounts:profile' %}" class="icon-btn" aria-label="Profile">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </a>
         </div>
@@ -44,7 +44,7 @@
         {% if is_default %}
         <div class="default-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            Показаны средние значения
+            Showing average values
         </div>
         {% endif %}
 
@@ -129,7 +129,7 @@
             <!-- Welcome message -->
             <div class="chat-message bot">
                 <div class="chat-bubble">
-                    Привет! 👋 Ваш recovery score сегодня <strong>{{ metrics.recovery_score }}%</strong>. Вы готовы к высокоинтенсивной тренировке. Задайте мне вопрос!
+                    Hi! 👋 Your recovery score today is <strong>{{ metrics.recovery_score }}%</strong>. You're ready for a high-intensity workout. Ask me anything!
                 </div>
             </div>
 
@@ -142,9 +142,9 @@
         </div>
 
         <div class="chat-suggestions">
-            <button class="suggestion-btn" data-q="Что мне съесть сегодня?">What should I eat?</button>
-            <button class="suggestion-btn" data-q="Могу ли я тренироваться сегодня?">Can I train today?</button>
-            <button class="suggestion-btn" data-q="Как улучшить сон?">Improve sleep</button>
+            <button class="suggestion-btn" data-q="What should I eat today?">What should I eat?</button>
+            <button class="suggestion-btn" data-q="Can I train today?">Can I train today?</button>
+            <button class="suggestion-btn" data-q="How can I improve my sleep?">Improve sleep</button>
         </div>
 
         <form class="chat-input-bar" id="chatForm">
@@ -172,4 +172,3 @@
     });
 </script>
 {% endblock %}
-

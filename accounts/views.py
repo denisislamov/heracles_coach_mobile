@@ -14,7 +14,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            messages.success(request, 'Регистрация прошла успешно!')
+            messages.success(request, 'Registration successful!')
             return redirect('dashboard:index')
     else:
         form = CustomUserCreationForm()
@@ -27,7 +27,7 @@ def profile_view(request):
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Профиль обновлён!')
+            messages.success(request, 'Profile updated!')
             return redirect('accounts:profile')
     else:
         form = ProfileForm(instance=request.user)
@@ -37,4 +37,3 @@ def profile_view(request):
 def logout_view(request):
     logout(request)
     return redirect('account_login')
-

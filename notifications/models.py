@@ -4,10 +4,10 @@ from django.conf import settings
 
 class Notification(models.Model):
     class NotificationType(models.TextChoices):
-        WORKOUT = 'workout', 'Тренировка'
-        NUTRITION = 'nutrition', 'Питание'
-        WATER = 'water', 'Вода'
-        GENERAL = 'general', 'Общее'
+        WORKOUT = 'workout', 'Workout'
+        NUTRITION = 'nutrition', 'Nutrition'
+        WATER = 'water', 'Water'
+        GENERAL = 'general', 'General'
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications')
     notification_type = models.CharField(
@@ -20,9 +20,8 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = 'Уведомление'
-        verbose_name_plural = 'Уведомления'
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
 
     def __str__(self):
         return f"{self.title} — {self.user.email}"
-

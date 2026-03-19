@@ -4,21 +4,21 @@ from django.utils import timezone
 
 
 WORKOUT_REMINDERS = [
-    "🏋️ Вы сегодня ещё не тренировались! Даже 15 минут зарядки улучшат ваше восстановление.",
-    "🏃 Время размяться! Короткая прогулка или растяжка помогут поднять настроение.",
-    "💪 Не забывайте о физической активности! Ваше тело скажет вам спасибо.",
-    "🧘 Как насчёт небольшой йоги или растяжки? Это займёт всего 10 минут!",
-    "🚶 Вы давно не двигались. Встаньте и пройдитесь хотя бы 5 минут!",
-    "⚡ Ваш уровень нагрузки сегодня низкий. Лёгкая тренировка поднимет показатели!",
+    "🏋️ You haven't worked out today! Even 15 minutes of exercise will boost your recovery.",
+    "🏃 Time to get moving! A short walk or stretch will lift your mood.",
+    "💪 Don't forget about physical activity! Your body will thank you.",
+    "🧘 How about some yoga or stretching? It only takes 10 minutes!",
+    "🚶 You've been sitting too long. Get up and walk for at least 5 minutes!",
+    "⚡ Your strain level is low today. A light workout will boost your stats!",
 ]
 
 NUTRITION_REMINDERS = [
-    "🥗 Пора проверить свой режим питания! Вы сегодня ели достаточно овощей?",
-    "💧 Не забывайте пить воду! Рекомендуется 2 литра в день.",
-    "🍎 Время перекуса! Выберите что-нибудь полезное — фрукты или орехи.",
-    "🥩 Убедитесь, что вы получаете достаточно белка сегодня — это улучшит восстановление.",
-    "🍽️ Проверьте свой баланс калорий на сегодня. Не пропускайте приёмы пищи!",
-    "🥛 Высокобелковый приём пищи сейчас улучшит ваши показатели восстановления на 6%.",
+    "🥗 Time to check your nutrition! Have you eaten enough veggies today?",
+    "💧 Don't forget to drink water! 2 liters a day is recommended.",
+    "🍎 Snack time! Choose something healthy — fruits or nuts.",
+    "🥩 Make sure you're getting enough protein today — it will improve recovery.",
+    "🍽️ Check your calorie balance for today. Don't skip meals!",
+    "🥛 A high-protein meal right now will improve your recovery score by 6%.",
 ]
 
 
@@ -47,11 +47,11 @@ def send_health_reminders():
             if random.random() > 0.5:
                 reminder = random.choice(WORKOUT_REMINDERS)
                 n_type = Notification.NotificationType.WORKOUT
-                title = "Напоминание о тренировке"
+                title = "Workout Reminder"
             else:
                 reminder = random.choice(NUTRITION_REMINDERS)
                 n_type = Notification.NotificationType.NUTRITION
-                title = "Напоминание о питании"
+                title = "Nutrition Reminder"
 
             Notification.objects.create(
                 user=user,
@@ -62,4 +62,3 @@ def send_health_reminders():
             notifications_created += 1
 
     return f"Created {notifications_created} notifications for {users.count()} users"
-

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Регистрация — Heracles Coach{% endblock %}
+{% block title %}Sign Up — Heracles Coach{% endblock %}
 
 {% block content %}
 <div class="auth-page">
@@ -13,7 +13,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
             <h1>Heracles Coach</h1>
-            <p>Создайте аккаунт</p>
+            <p>Create your account</p>
         </div>
 
         <!-- Register Form -->
@@ -53,13 +53,12 @@
                 {{ form.password2 }}
             </div>
 
-            <button type="submit" class="btn-primary">Зарегистрироваться</button>
+            <button type="submit" class="btn-primary">Sign Up</button>
         </form>
 
         <div class="auth-footer">
-            Уже есть аккаунт? <a href="{% url 'account_login' %}">Войти</a>
+            Already have an account? <a href="{% url 'account_login' %}">Sign In</a>
         </div>
     </div>
 </div>
 {% endblock %}
-

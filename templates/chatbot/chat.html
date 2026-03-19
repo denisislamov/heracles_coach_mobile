@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}AI Коуч — Heracles Coach{% endblock %}
+{% block title %}AI Coach — Heracles Coach{% endblock %}
 
 {% block content %}
 <div class="chat-page">
@@ -11,9 +11,9 @@
         <div>
             <h2>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                AI Коуч
+                AI Coach
             </h2>
-            <small>Задавайте вопросы о питании, тренировках и здоровье</small>
+            <small>Ask about nutrition, workouts, and health</small>
         </div>
         <a href="{% url 'dashboard:index' %}" class="icon-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -26,12 +26,12 @@
             <!-- Welcome -->
             <div class="chat-message bot">
                 <div class="chat-bubble">
-                    Привет! 👋 Я ваш AI коуч по здоровью. Могу помочь с вопросами о:
+                    Hi! 👋 I'm your AI health coach. I can help with:
                     <br><br>
-                    🏋️ Тренировках и упражнениях<br>
-                    🥗 Питании и диете<br>
-                    😴 Сне и восстановлении<br>
-                    💊 Общем здоровье
+                    🏋️ Workouts and exercises<br>
+                    🥗 Nutrition and diet<br>
+                    😴 Sleep and recovery<br>
+                    💊 General health
                 </div>
             </div>
 
@@ -44,10 +44,10 @@
         </div>
 
         <div class="chat-suggestions">
-            <button class="suggestion-btn" data-q="Какие упражнения для спины?">Упражнения для спины</button>
-            <button class="suggestion-btn" data-q="Сколько воды нужно пить в день?">Норма воды</button>
-            <button class="suggestion-btn" data-q="Как улучшить сон?">Улучшить сон</button>
-            <button class="suggestion-btn" data-q="Составь план тренировки на неделю">План тренировки</button>
+            <button class="suggestion-btn" data-q="What are good back exercises?">Back exercises</button>
+            <button class="suggestion-btn" data-q="How much water should I drink daily?">Daily water intake</button>
+            <button class="suggestion-btn" data-q="How can I improve my sleep?">Improve sleep</button>
+            <button class="suggestion-btn" data-q="Create a weekly workout plan">Workout plan</button>
         </div>
 
         <form class="chat-input-bar" id="chatForm">
@@ -65,4 +65,3 @@
 <script src="{% static 'js/chat.js' %}"></script>
 <script src="{% static 'js/notifications.js' %}"></script>
 {% endblock %}
-

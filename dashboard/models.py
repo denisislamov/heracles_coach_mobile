@@ -6,21 +6,21 @@ class HealthMetric(models.Model):
     """Stores daily health metrics for a user."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='health_metrics')
     date = models.DateField(auto_now_add=True)
-    steps = models.IntegerField(default=0, verbose_name='Шаги')
-    calories_consumed = models.IntegerField(default=0, verbose_name='Калории (потреблено)')
-    calories_burned = models.IntegerField(default=0, verbose_name='Калории (сожжено)')
-    water_ml = models.IntegerField(default=0, verbose_name='Вода (мл)')
-    sleep_hours = models.FloatField(default=0, verbose_name='Сон (часы)')
-    heart_rate_avg = models.IntegerField(default=0, verbose_name='Средний пульс')
-    workout_minutes = models.IntegerField(default=0, verbose_name='Тренировка (мин)')
-    recovery_score = models.IntegerField(default=0, verbose_name='Восстановление (%)')
-    strain_level = models.FloatField(default=0, verbose_name='Нагрузка')
+    steps = models.IntegerField(default=0, verbose_name='Steps')
+    calories_consumed = models.IntegerField(default=0, verbose_name='Calories (consumed)')
+    calories_burned = models.IntegerField(default=0, verbose_name='Calories (burned)')
+    water_ml = models.IntegerField(default=0, verbose_name='Water (ml)')
+    sleep_hours = models.FloatField(default=0, verbose_name='Sleep (hours)')
+    heart_rate_avg = models.IntegerField(default=0, verbose_name='Avg heart rate')
+    workout_minutes = models.IntegerField(default=0, verbose_name='Workout (min)')
+    recovery_score = models.IntegerField(default=0, verbose_name='Recovery (%)')
+    strain_level = models.FloatField(default=0, verbose_name='Strain')
 
     class Meta:
         ordering = ['-date']
         unique_together = ['user', 'date']
-        verbose_name = 'Метрика здоровья'
-        verbose_name_plural = 'Метрики здоровья'
+        verbose_name = 'Health metric'
+        verbose_name_plural = 'Health metrics'
 
     def __str__(self):
         return f"{self.user.email} - {self.date}"
@@ -48,4 +48,3 @@ def get_weekly_trend():
         'sleep': [7.5, 6.8, 8.2, 7.9, 8.5, 7.2, 8.1],
         'strain': [12, 15, 10, 14, 11, 13, 9],
     }
-

@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 addMessage('⚠️ ' + data.error, false);
             }
         } catch (error) {
-            addMessage('⚠️ Ошибка подключения к серверу. Попробуйте позже.', false);
+            addMessage('⚠️ Connection error. Please try again later.', false);
         } finally {
             setLoading(false);
             if (chatInput) chatInput.focus();

@@ -1,7 +1,7 @@
 {% extends "allauth/layouts/base.html" %}
 {% load static i18n %}
 
-{% block head_title %}Вход — Heracles Coach{% endblock %}
+{% block head_title %}Sign In — Heracles Coach{% endblock %}
 
 {% block content %}
 <div class="auth-page">
@@ -45,7 +45,7 @@
                 <div class="auth-field-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
-                <input type="password" name="password" class="auth-input" placeholder="Пароль" required autocomplete="current-password">
+                <input type="password" name="password" class="auth-input" placeholder="Password" required autocomplete="current-password">
             </div>
 
             {% if redirect_field_value %}
@@ -56,7 +56,7 @@
         </form>
 
         <div class="auth-footer">
-            Нет аккаунта? <a href="{% url 'accounts:register' %}">Зарегистрироваться</a>
+            Don't have an account? <a href="{% url 'accounts:register' %}">Sign Up</a>
         </div>
     </div>
 </div>

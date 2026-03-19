@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const date = new Date(dateString);
         const now = new Date();
         const diffMin = Math.floor((now - date) / 60000);
-        if (diffMin < 1) return 'сейчас';
-        if (diffMin < 60) return `${diffMin} мин`;
+        if (diffMin < 1) return 'now';
+        if (diffMin < 60) return `${diffMin}m ago`;
         const diffHour = Math.floor(diffMin / 60);
-        if (diffHour < 24) return `${diffHour} ч`;
-        return date.toLocaleDateString('ru-RU');
+        if (diffHour < 24) return `${diffHour}h ago`;
+        return date.toLocaleDateString('en-US');
     }
 
     function getNotifIcon(type) {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else {
                 if (notifBadge) notifBadge.classList.add('hidden');
-                if (notifList) notifList.innerHTML = '<div class="notif-empty">Нет новых уведомлений</div>';
+                if (notifList) notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
             }
         } catch (e) {
             console.error('Failed to fetch notifications:', e);
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const remaining = notifList.querySelectorAll('.notif-item').length;
         if (remaining === 0) {
             if (notifBadge) notifBadge.classList.add('hidden');
-            notifList.innerHTML = '<div class="notif-empty">Нет новых уведомлений</div>';
+            notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
         } else {
             if (notifBadge) {
                 notifBadge.textContent = remaining;
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: { 'X-CSRFToken': getCSRFToken() },
             });
             if (notifBadge) notifBadge.classList.add('hidden');
-            if (notifList) notifList.innerHTML = '<div class="notif-empty">Нет новых уведомлений</div>';
+            if (notifList) notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
         });
     }
 
