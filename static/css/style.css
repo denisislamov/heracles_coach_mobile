@@ -277,7 +277,7 @@ a:hover { color: #c084fc; }
 /* Header */
 .app-header {
     position: relative;
-    z-index: 30;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -319,6 +319,8 @@ a:hover { color: #c084fc; }
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    z-index: 100;
 }
 
 .icon-btn {
@@ -360,20 +362,20 @@ a:hover { color: #c084fc; }
 
 .notif-panel {
     display: none;
-    position: absolute;
-    top: calc(100% + 0.75rem);
-    right: 0;
-    width: 250px;
-    background: #16162a;
-    border: 2px solid rgba(139, 92, 246, 0.5);
+    position: fixed;
+    top: 70px;
+    right: 1rem;
+    width: 260px;
+    background: #2d2b55;
+    border: 2px solid #a78bfa;
     border-radius: 1rem;
-    padding: 0.6rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 24px rgba(139, 92, 246, 0.15);
-    z-index: 999;
+    padding: 0.75rem;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.35);
+    z-index: 9999;
     animation: panelSlideIn 0.2s ease-out;
 }
 
-.notif-panel.open { display: flex; flex-direction: column; gap: 0.4rem; }
+.notif-panel.open { display: flex; flex-direction: column; gap: 0.5rem; }
 
 @keyframes panelSlideIn {
     from { opacity: 0; transform: translateY(-8px) scale(0.95); }
@@ -385,19 +387,19 @@ a:hover { color: #c084fc; }
     align-items: center;
     gap: 0.75rem;
     width: 100%;
-    padding: 0.85rem 1rem;
-    border: 1.5px solid;
+    padding: 0.9rem 1rem;
+    border: 2px solid;
     border-radius: 0.75rem;
     color: white;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.15s ease;
     text-align: left;
 }
 
 .notif-panel-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .notif-panel-btn:active {
@@ -405,34 +407,31 @@ a:hover { color: #c084fc; }
 }
 
 .notif-panel-btn.workout {
-    background: rgba(139, 92, 246, 0.2);
-    border-color: rgba(139, 92, 246, 0.5);
+    background: rgba(139, 92, 246, 0.35);
+    border-color: #a78bfa;
 }
 .notif-panel-btn.workout:hover {
-    background: rgba(139, 92, 246, 0.35);
-    border-color: rgba(139, 92, 246, 0.7);
+    background: rgba(139, 92, 246, 0.55);
 }
 
 .notif-panel-btn.sleep {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(59, 130, 246, 0.35);
+    border-color: #60a5fa;
 }
 .notif-panel-btn.sleep:hover {
-    background: rgba(59, 130, 246, 0.35);
-    border-color: rgba(59, 130, 246, 0.7);
+    background: rgba(59, 130, 246, 0.55);
 }
 
 .notif-panel-btn.nutrition {
-    background: rgba(34, 197, 94, 0.2);
-    border-color: rgba(34, 197, 94, 0.5);
+    background: rgba(34, 197, 94, 0.35);
+    border-color: #4ade80;
 }
 .notif-panel-btn.nutrition:hover {
-    background: rgba(34, 197, 94, 0.35);
-    border-color: rgba(34, 197, 94, 0.7);
+    background: rgba(34, 197, 94, 0.55);
 }
 
-.notif-panel-icon { font-size: 1.3rem; flex-shrink: 0; }
-.notif-panel-label { font-weight: 600; letter-spacing: 0.01em; }
+.notif-panel-icon { font-size: 1.4rem; flex-shrink: 0; }
+.notif-panel-label { font-weight: 700; letter-spacing: 0.01em; }
 
 .notif-badge {
     position: absolute;
@@ -456,7 +455,7 @@ a:hover { color: #c084fc; }
 /* Dashboard content */
 .dashboard-content {
     position: relative;
-    z-index: 10;
+    z-index: 1;
     flex: 1;
     padding: 0 1.5rem;
     padding-bottom: 1rem;
@@ -726,7 +725,7 @@ a:hover { color: #c084fc; }
    ============================================ */
 .chat-section {
     position: relative;
-    z-index: 10;
+    z-index: 1;
     flex: 1;
     background: linear-gradient(to bottom, rgba(255,255,255,0.04), rgba(0,0,0,0.3));
     backdrop-filter: blur(20px);
