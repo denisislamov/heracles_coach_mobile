@@ -356,6 +356,61 @@ a:hover { color: #c084fc; }
     100% { transform: rotate(0); }
 }
 
+/* Notification panel */
+.notif-wrapper { position: relative; }
+
+.notif-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    width: 220px;
+    background: rgba(15, 15, 30, 0.95);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    animation: panelSlideIn 0.2s ease-out;
+}
+
+.notif-panel.open { display: flex; flex-direction: column; gap: 0.25rem; }
+
+@keyframes panelSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notif-panel-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.notif-panel-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--glass-border);
+    color: white;
+}
+
+.notif-panel-btn.workout:hover { border-color: rgba(139, 92, 246, 0.4); }
+.notif-panel-btn.sleep:hover { border-color: rgba(59, 130, 246, 0.4); }
+.notif-panel-btn.nutrition:hover { border-color: rgba(34, 197, 94, 0.4); }
+
+.notif-panel-icon { font-size: 1.1rem; flex-shrink: 0; }
+.notif-panel-label { font-weight: 500; }
+
 .notif-badge {
     position: absolute;
     top: -2px;
