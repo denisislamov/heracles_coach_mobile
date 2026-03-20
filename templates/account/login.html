@@ -58,6 +58,8 @@
         <div class="auth-footer">
             Don't have an account? <a href="{% url 'accounts:register' %}">Sign Up</a>
         </div>
+
+        <div class="auth-version">v{{ APP_VERSION }}</div>
     </div>
 </div>
 {% endblock %}
