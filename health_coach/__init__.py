@@ -4,5 +4,5 @@ try:
 except Exception:
     pass
 
-VERSION = '0.0.9'
+VERSION = '0.0.10'
 
