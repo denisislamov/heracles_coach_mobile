@@ -30,7 +30,7 @@ services:
       - key: VAPID_PRIVATE_KEY
         sync: false
       - key: VAPID_ADMIN_EMAIL
-        value: "mailto:denis@heracles.health"
+        value: "denis@heracles.health"
       - key: RENDER_EXTERNAL_HOSTNAME
         fromService:
           name: health-coach-web
