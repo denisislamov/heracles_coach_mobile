@@ -108,6 +108,33 @@
                 <p>You are ready for a moderate workout today</p>
             </div>
         </div>
+
+        <!-- Biomarkers Panel -->
+        <div class="glass-card biomarkers-section">
+            <div class="biomarkers-header">
+                <div class="biomarkers-header-left">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <span style="color: white; font-weight: 500;">Biomarkers</span>
+                </div>
+                <span class="biomarkers-badge">Latest panel</span>
+            </div>
+
+            <div class="biomarkers-grid">
+                {% for b in biomarkers %}
+                <div class="biomarker-card">
+                    <div class="biomarker-top">
+                        <span class="biomarker-icon">{{ b.icon }}</span>
+                        <span class="biomarker-status {{ b.status }}">{{ b.status }}</span>
+                    </div>
+                    <div class="biomarker-value">{{ b.value }} <small>{{ b.unit }}</small></div>
+                    <div class="biomarker-name">{{ b.name }}</div>
+                    <div class="biomarker-ref">Ref: {{ b.ref_range }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
     <!-- Chat Section (bottom half) -->

@@ -41,6 +41,70 @@ def get_default_metrics():
     }
 
 
+def get_default_biomarkers():
+    """Return average biomarker values for a healthy adult male.
+
+    Based on Heracles PhenoAge spec (Levine et al., 2018) and
+    standard clinical reference ranges.
+    """
+    return [
+        {
+            'name': 'Testosterone',
+            'value': 18.5,
+            'unit': 'nmol/L',
+            'ref_range': '8.6 – 29.0',
+            'status': 'normal',
+            'icon': '🧬',
+            'category': 'Hormonal',
+        },
+        {
+            'name': 'Vitamin D',
+            'value': 75,
+            'unit': 'nmol/L',
+            'ref_range': '50 – 150',
+            'status': 'normal',
+            'icon': '☀️',
+            'category': 'Nutritional',
+        },
+        {
+            'name': 'CRP (hs)',
+            'value': 0.8,
+            'unit': 'mg/L',
+            'ref_range': '< 3.0',
+            'status': 'optimal',
+            'icon': '🔥',
+            'category': 'Inflammatory',
+        },
+        {
+            'name': 'HbA1c',
+            'value': 5.2,
+            'unit': '%',
+            'ref_range': '4.0 – 5.6',
+            'status': 'normal',
+            'icon': '🩸',
+            'category': 'Metabolic',
+        },
+        {
+            'name': 'LDL Cholesterol',
+            'value': 2.8,
+            'unit': 'mmol/L',
+            'ref_range': '< 3.0',
+            'status': 'normal',
+            'icon': '❤️',
+            'category': 'Cardiovascular',
+        },
+        {
+            'name': 'Ferritin',
+            'value': 95,
+            'unit': 'µg/L',
+            'ref_range': '30 – 400',
+            'status': 'normal',
+            'icon': '🧲',
+            'category': 'Nutritional',
+        },
+    ]
+
+
 def get_weekly_trend():
     """Return mock 7-day trend data."""
     return {
