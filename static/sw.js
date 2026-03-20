@@ -2,7 +2,6 @@
 // Handles push notifications and offline workout reminders
 
 const REMINDER_DELAY = 5 * 60 * 1000; // 5 minutes in ms
-let reminderTimeout = null;
 
 // Install event
 self.addEventListener('install', (event) => {
@@ -15,6 +14,9 @@ self.addEventListener('activate', (event) => {
 });
 
 // Listen for messages from the main page
+let reminderTimeout = null;
+let scheduledReminderTimeout = null;
+
 self.addEventListener('message', (event) => {
     const data = event.data;
 
@@ -27,8 +29,31 @@ self.addEventListener('message', (event) => {
     }
 
     if (data.type === 'USER_RETURNED') {
-        // User came back — cancel the reminder
+        // User came back — cancel the auto reminder
         clearTimeout(reminderTimeout);
+    }
+
+    if (data.type === 'SCHEDULE_REMINDER') {
+        // User manually requested a reminder — schedule in 1 minute
+        const delay = (data.delay || 60) * 1000;
+        clearTimeout(scheduledReminderTimeout);
+        scheduledReminderTimeout = setTimeout(() => {
+            self.registration.showNotification('Heracles Coach 🏋️', {
+                body: data.body || "Don't forget your workout! Time to get moving 💪",
+                icon: '/static/icons/icon-192.svg',
+                tag: 'scheduled-workout-reminder',
+                renotify: true,
+                requireInteraction: true,
+                vibrate: [200, 100, 200],
+                actions: [
+                    { action: 'open', title: 'Open App' },
+                    { action: 'dismiss', title: 'Dismiss' },
+                ],
+            });
+        }, delay);
+
+        // Notify the page that the reminder was scheduled
+        event.source.postMessage({ type: 'REMINDER_SCHEDULED', delay: delay / 1000 });
     }
 });
 
@@ -36,8 +61,7 @@ self.addEventListener('message', (event) => {
 function showWorkoutReminder() {
     self.registration.showNotification('Heracles Coach 🏋️', {
         body: "Don't forget your workout! Even 15 minutes of exercise will boost your recovery.",
-        icon: '/static/icons/icon-192.png',
-        badge: '/static/icons/icon-72.png',
+        icon: '/static/icons/icon-192.svg',
         tag: 'workout-reminder',
         renotify: true,
         requireInteraction: true,

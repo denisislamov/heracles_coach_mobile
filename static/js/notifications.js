@@ -1,133 +1,71 @@
+/**
+ * Heracles Coach — Notification Bell Handler
+ *
+ * Clicking the bell schedules a push notification in 1 minute
+ * via the Service Worker: "Don't forget your workout!"
+ */
 document.addEventListener('DOMContentLoaded', function () {
     const bellBtn = document.getElementById('notifBell');
-    const dropdown = document.getElementById('notifDropdown');
-    const notifBadge = document.getElementById('notifBadge');
-    const notifList = document.getElementById('notifList');
-    const markAllBtn = document.getElementById('markAllRead');
+    if (!bellBtn) return;
 
-    function getCSRFToken() {
-        const cookie = document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='));
-        return cookie ? cookie.split('=')[1] : '';
-    }
-
-    function timeAgo(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMin = Math.floor((now - date) / 60000);
-        if (diffMin < 1) return 'now';
-        if (diffMin < 60) return `${diffMin}m ago`;
-        const diffHour = Math.floor(diffMin / 60);
-        if (diffHour < 24) return `${diffHour}h ago`;
-        return date.toLocaleDateString('en-US');
-    }
-
-    function getNotifIcon(type) {
-        const icons = {
-            workout: '🏋️',
-            nutrition: '🥗',
-            water: '💧',
-            general: '🔔',
-        };
-        return icons[type] || icons.general;
-    }
-
-    async function fetchNotifications() {
-        try {
-            const resp = await fetch('/notifications/api/');
-            const data = await resp.json();
-            const notifications = data.notifications || [];
-
-            if (notifications.length > 0) {
-                if (notifBadge) {
-                    notifBadge.textContent = notifications.length;
-                    notifBadge.classList.remove('hidden');
-                }
-
-                if (notifList) {
-                    notifList.innerHTML = notifications.map(n => `
-                        <div class="notif-item" data-id="${n.id}">
-                            <div class="notif-item-icon ${n.type}">${getNotifIcon(n.type)}</div>
-                            <div class="notif-item-content">
-                                <div class="notif-item-title">${n.title}</div>
-                                <div class="notif-item-text">${n.message}</div>
-                                <div class="notif-item-time">${timeAgo(n.created_at)}</div>
-                            </div>
-                        </div>
-                    `).join('');
-
-                    // Click to dismiss
-                    notifList.querySelectorAll('.notif-item').forEach(item => {
-                        item.addEventListener('click', async function () {
-                            const id = this.dataset.id;
-                            await fetch(`/notifications/api/${id}/read/`, {
-                                method: 'POST',
-                                headers: { 'X-CSRFToken': getCSRFToken() },
-                            });
-                            this.remove();
-                            updateBadge();
-                        });
-                    });
-                }
-
-                // Browser notification for the newest
-                if (Notification.permission === 'granted') {
-                    const latest = notifications[0];
-                    new Notification(latest.title, { body: latest.message });
-                }
-            } else {
-                if (notifBadge) notifBadge.classList.add('hidden');
-                if (notifList) notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
-            }
-        } catch (e) {
-            console.error('Failed to fetch notifications:', e);
-        }
-    }
-
-    function updateBadge() {
-        if (!notifList) return;
-        const remaining = notifList.querySelectorAll('.notif-item').length;
-        if (remaining === 0) {
-            if (notifBadge) notifBadge.classList.add('hidden');
-            notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
-        } else {
-            if (notifBadge) {
-                notifBadge.textContent = remaining;
-                notifBadge.classList.remove('hidden');
-            }
-        }
-    }
-
-    // Toggle dropdown
-    if (bellBtn && dropdown) {
-        bellBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            dropdown.classList.toggle('open');
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!dropdown.contains(e.target) && e.target !== bellBtn) {
-                dropdown.classList.remove('open');
+    // Listen for confirmation from the Service Worker
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'REMINDER_SCHEDULED') {
+                showToast(`🔔 Workout reminder set for ${event.data.delay}s from now!`);
             }
         });
     }
 
-    // Mark all read
-    if (markAllBtn) {
-        markAllBtn.addEventListener('click', async function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            await fetch('/notifications/api/read-all/', {
-                method: 'POST',
-                headers: { 'X-CSRFToken': getCSRFToken() },
+    bellBtn.addEventListener('click', function () {
+        // Request notification permission if not yet granted
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then((perm) => {
+                if (perm === 'granted') {
+                    scheduleReminder();
+                } else {
+                    showToast('⚠️ Please allow notifications to receive reminders.');
+                }
             });
-            if (notifBadge) notifBadge.classList.add('hidden');
-            if (notifList) notifList.innerHTML = '<div class="notif-empty">No new notifications</div>';
-        });
+            return;
+        }
+
+        if ('Notification' in window && Notification.permission === 'denied') {
+            showToast('⚠️ Notifications are blocked. Enable them in browser settings.');
+            return;
+        }
+
+        scheduleReminder();
+    });
+
+    function scheduleReminder() {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'SCHEDULE_REMINDER',
+                delay: 60, // 1 minute in seconds
+                body: "Don't forget your workout! Time to get moving 💪",
+            });
+
+            // Visual feedback — animate the bell
+            bellBtn.classList.add('bell-ring');
+            setTimeout(() => bellBtn.classList.remove('bell-ring'), 1000);
+
+            showToast('🔔 Workout reminder scheduled in 1 minute!');
+        } else {
+            showToast('⚠️ Service Worker not ready. Refresh and try again.');
+        }
     }
 
+    function showToast(text) {
+        // Remove any existing toast
+        const old = document.querySelector('.alert-toast');
+        if (old) old.remove();
 
-    // Fetch on load and poll every 60s
-    fetchNotifications();
-    setInterval(fetchNotifications, 60000);
+        const toast = document.createElement('div');
+        toast.className = 'alert-toast success';
+        toast.textContent = text;
+        toast.onclick = () => toast.remove();
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
 });
-

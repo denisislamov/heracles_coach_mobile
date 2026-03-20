@@ -232,6 +232,15 @@ a:hover { color: #c084fc; }
 
 .auth-footer a { font-weight: 600; }
 
+.auth-version {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+}
+
 .auth-errors {
     background: rgba(248, 113, 113, 0.1);
     border: 1px solid rgba(248, 113, 113, 0.3);
