@@ -113,12 +113,8 @@ def _send_push_after_delay(user_id, delay, title, body):
     subscriptions = PushSubscription.objects.filter(user_id=user_id)
     payload = json.dumps({'title': title, 'body': body, 'tag': 'workout-reminder'})
 
-    # Build PEM from the base64 DER key stored in settings
-    raw_key = settings.VAPID_PRIVATE_KEY.strip()
-    if raw_key.startswith('-----'):
-        pem_key = raw_key
-    else:
-        pem_key = f"-----BEGIN PRIVATE KEY-----\n{raw_key}\n-----END PRIVATE KEY-----\n"
+    vapid_private_key = settings.VAPID_PRIVATE_KEY.strip()
+    vapid_claims = {'sub': settings.VAPID_ADMIN_EMAIL}
 
     for sub in subscriptions:
         subscription_info = {
@@ -132,8 +128,8 @@ def _send_push_after_delay(user_id, delay, title, body):
             webpush(
                 subscription_info=subscription_info,
                 data=payload,
-                vapid_private_key=pem_key,
-                vapid_claims={'sub': settings.VAPID_ADMIN_EMAIL},
+                vapid_private_key=vapid_private_key,
+                vapid_claims=vapid_claims,
             )
         except WebPushException as e:
             # Subscription expired or invalid — remove it
