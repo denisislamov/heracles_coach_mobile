@@ -364,13 +364,14 @@ a:hover { color: #c084fc; }
     display: none;
     position: fixed;
     top: 70px;
-    right: 1rem;
+    right: 50%;
+    transform: translateX(min(240px, 50vw - 1rem));
     width: 260px;
-    background: #2d2b55;
+    background: #3b3872;
     border: 2px solid #a78bfa;
     border-radius: 1rem;
     padding: 0.75rem;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.35);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.4);
     z-index: 9999;
     animation: panelSlideIn 0.2s ease-out;
 }
@@ -407,27 +408,27 @@ a:hover { color: #c084fc; }
 }
 
 .notif-panel-btn.workout {
-    background: rgba(139, 92, 246, 0.35);
+    background: rgba(139, 92, 246, 0.45);
     border-color: #a78bfa;
 }
 .notif-panel-btn.workout:hover {
-    background: rgba(139, 92, 246, 0.55);
+    background: rgba(139, 92, 246, 0.65);
 }
 
 .notif-panel-btn.sleep {
-    background: rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.45);
     border-color: #60a5fa;
 }
 .notif-panel-btn.sleep:hover {
-    background: rgba(59, 130, 246, 0.55);
+    background: rgba(59, 130, 246, 0.65);
 }
 
 .notif-panel-btn.nutrition {
-    background: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.45);
     border-color: #4ade80;
 }
 .notif-panel-btn.nutrition:hover {
-    background: rgba(34, 197, 94, 0.55);
+    background: rgba(34, 197, 94, 0.65);
 }
 
 .notif-panel-icon { font-size: 1.4rem; flex-shrink: 0; }
