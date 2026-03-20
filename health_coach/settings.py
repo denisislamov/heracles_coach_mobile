@@ -30,13 +30,16 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'django_celery_beat',
     # Local
     'accounts.apps.AccountsConfig',
     'dashboard.apps.DashboardConfig',
     'chatbot.apps.ChatbotConfig',
     'notifications.apps.NotificationsConfig',
 ]
+
+# Add celery-beat only if Redis is available
+if env('REDIS_URL', default=''):
+    INSTALLED_APPS.insert(-1, 'django_celery_beat')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,13 +148,16 @@ else:
     EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
 # Celery
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+# Celery (optional — only if Redis is available)
+REDIS_URL = env('REDIS_URL', default='')
+if REDIS_URL:
+    CELERY_BROKER_URL = REDIS_URL
+    CELERY_RESULT_BACKEND = REDIS_URL
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TIMEZONE = TIME_ZONE
+    CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # HuggingFace
 HUGGINGFACE_API_TOKEN = env('HUGGINGFACE_API_TOKEN', default='')
