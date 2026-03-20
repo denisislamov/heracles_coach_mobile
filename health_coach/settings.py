@@ -156,6 +156,11 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 # HuggingFace
 HUGGINGFACE_API_TOKEN = env('HUGGINGFACE_API_TOKEN', default='')
 
+# Web Push (VAPID)
+VAPID_PUBLIC_KEY = env('VAPID_PUBLIC_KEY', default='')
+VAPID_PRIVATE_KEY = env('VAPID_PRIVATE_KEY', default='')
+VAPID_ADMIN_EMAIL = env('VAPID_ADMIN_EMAIL', default='mailto:admin@heraclescoach.com')
+
 # CSRF for render.com
 CSRF_TRUSTED_ORIGINS = []
 if RENDER_EXTERNAL_HOSTNAME:

@@ -10,4 +10,6 @@ django-celery-beat==2.7.0
 huggingface-hub==0.27.1
 requests==2.32.3
 django-allauth==65.3.0
+pywebpush==2.3.0
+py-vapid==1.9.4
 

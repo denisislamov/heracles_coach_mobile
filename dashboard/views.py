@@ -3,7 +3,6 @@ import math
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import HealthMetric, get_default_metrics, get_weekly_trend
-from notifications.models import Notification
 
 
 @login_required
@@ -29,10 +28,6 @@ def index(request):
 
     trends = get_weekly_trend()
 
-    unread_count = Notification.objects.filter(
-        user=request.user, is_read=False
-    ).count()
-
     # SVG circular progress calculations
     radius = 54
     circumference = 2 * math.pi * radius
@@ -43,7 +38,6 @@ def index(request):
         'metrics': metrics,
         'is_default': is_default,
         'trends_json': json.dumps(trends),
-        'unread_count': unread_count,
         'user_initial': (request.user.email[0] if request.user.email else 'U').upper(),
         'recovery_circumference': f'{circumference:.1f}',
         'recovery_offset': f'{offset:.1f}',

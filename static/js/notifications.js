@@ -1,63 +1,64 @@
 /**
  * Heracles Coach — Notification Bell Handler
  *
- * Clicking the bell schedules a push notification in 1 minute
- * via the Service Worker: "Don't forget your workout!"
+ * Clicking the bell:
+ * 1. Subscribes to Web Push (if not already)
+ * 2. Sends request to server to schedule a real push in 30 seconds
+ * 3. Push arrives even if browser/tab is closed
  */
 document.addEventListener('DOMContentLoaded', function () {
     const bellBtn = document.getElementById('notifBell');
     if (!bellBtn) return;
 
-    // Listen for confirmation from the Service Worker
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'REMINDER_SCHEDULED') {
-                showToast(`🔔 Workout reminder set for ${event.data.delay}s from now!`);
-            }
-        });
+    function getCSRFToken() {
+        const el = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (el) return el.value;
+        const cookie = document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='));
+        return cookie ? cookie.split('=')[1] : '';
     }
 
-    bellBtn.addEventListener('click', function () {
-        // Request notification permission if not yet granted
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission().then((perm) => {
-                if (perm === 'granted') {
-                    scheduleReminder();
-                } else {
-                    showToast('⚠️ Please allow notifications to receive reminders.');
-                }
+    bellBtn.addEventListener('click', async function () {
+        // Step 1: ensure push subscription exists
+        if (!window.heraclesPush) {
+            showToast('⚠️ Push not supported on this browser.');
+            return;
+        }
+
+        const result = await window.heraclesPush.subscribe();
+        if (result.error === 'denied') {
+            showToast('⚠️ Notifications blocked. Enable them in browser settings.');
+            return;
+        }
+
+        // Step 2: ask the server to schedule a real push in 30 seconds
+        try {
+            const resp = await fetch('/notifications/api/schedule-push/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: JSON.stringify({
+                    delay: 30,
+                    title: 'Heracles Coach 🏋️',
+                    body: "Don't forget your workout! Time to get moving 💪",
+                }),
             });
-            return;
-        }
+            const data = await resp.json();
 
-        if ('Notification' in window && Notification.permission === 'denied') {
-            showToast('⚠️ Notifications are blocked. Enable them in browser settings.');
-            return;
+            if (data.status === 'scheduled') {
+                bellBtn.classList.add('bell-ring');
+                setTimeout(() => bellBtn.classList.remove('bell-ring'), 1000);
+                showToast('🔔 Workout reminder in 30 seconds!');
+            } else {
+                showToast('⚠️ Could not schedule reminder.');
+            }
+        } catch (e) {
+            showToast('⚠️ Connection error. Try again.');
         }
-
-        scheduleReminder();
     });
 
-    function scheduleReminder() {
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-                type: 'SCHEDULE_REMINDER',
-                delay: 60, // 1 minute in seconds
-                body: "Don't forget your workout! Time to get moving 💪",
-            });
-
-            // Visual feedback — animate the bell
-            bellBtn.classList.add('bell-ring');
-            setTimeout(() => bellBtn.classList.remove('bell-ring'), 1000);
-
-            showToast('🔔 Workout reminder scheduled in 1 minute!');
-        } else {
-            showToast('⚠️ Service Worker not ready. Refresh and try again.');
-        }
-    }
-
     function showToast(text) {
-        // Remove any existing toast
         const old = document.querySelector('.alert-toast');
         if (old) old.remove();
 

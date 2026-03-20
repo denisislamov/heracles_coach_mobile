@@ -342,6 +342,20 @@ a:hover { color: #c084fc; }
 
 .icon-btn svg { width: 20px; height: 20px; }
 
+/* Bell ring animation */
+.bell-ring {
+    animation: bellShake 0.6s ease-in-out;
+}
+@keyframes bellShake {
+    0%   { transform: rotate(0); }
+    15%  { transform: rotate(14deg); }
+    30%  { transform: rotate(-12deg); }
+    45%  { transform: rotate(10deg); }
+    60%  { transform: rotate(-8deg); }
+    75%  { transform: rotate(4deg); }
+    100% { transform: rotate(0); }
+}
+
 .notif-badge {
     position: absolute;
     top: -2px;

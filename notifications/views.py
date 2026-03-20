@@ -1,6 +1,12 @@
+import json
+import threading
+import time
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Notification
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.conf import settings
+from .models import Notification, PushSubscription
 
 
 @login_required
@@ -46,3 +52,92 @@ def mark_all_read(request):
         return JsonResponse({'status': 'ok'})
     return JsonResponse({'error': 'POST only'}, status=405)
 
+
+@login_required
+@require_POST
+def subscribe_push(request):
+    """API: Save a Web Push subscription for the current user."""
+    try:
+        data = json.loads(request.body)
+        endpoint = data.get('endpoint')
+        keys = data.get('keys', {})
+        p256dh = keys.get('p256dh', '')
+        auth = keys.get('auth', '')
+
+        if not endpoint or not p256dh or not auth:
+            return JsonResponse({'error': 'Missing subscription data'}, status=400)
+
+        PushSubscription.objects.update_or_create(
+            endpoint=endpoint,
+            defaults={
+                'user': request.user,
+                'p256dh': p256dh,
+                'auth': auth,
+            },
+        )
+        return JsonResponse({'status': 'ok'})
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+
+@login_required
+@require_POST
+def schedule_push(request):
+    """API: Schedule a push notification to be sent after a delay."""
+    try:
+        data = json.loads(request.body)
+        delay = int(data.get('delay', 30))  # seconds
+        title = data.get('title', 'Heracles Coach 🏋️')
+        body = data.get('body', "Don't forget your workout! Time to get moving 💪")
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    # Send push after delay in a background thread
+    user_id = request.user.id
+    thread = threading.Thread(
+        target=_send_push_after_delay,
+        args=(user_id, delay, title, body),
+        daemon=True,
+    )
+    thread.start()
+
+    return JsonResponse({'status': 'scheduled', 'delay': delay})
+
+
+def _send_push_after_delay(user_id, delay, title, body):
+    """Background: wait `delay` seconds then send push to all user's subscriptions."""
+    time.sleep(delay)
+
+    from pywebpush import webpush, WebPushException
+
+    subscriptions = PushSubscription.objects.filter(user_id=user_id)
+    payload = json.dumps({'title': title, 'body': body, 'tag': 'workout-reminder'})
+
+    # Build PEM from the base64 DER key stored in settings
+    raw_key = settings.VAPID_PRIVATE_KEY.strip()
+    if raw_key.startswith('-----'):
+        pem_key = raw_key
+    else:
+        pem_key = f"-----BEGIN PRIVATE KEY-----\n{raw_key}\n-----END PRIVATE KEY-----\n"
+
+    for sub in subscriptions:
+        subscription_info = {
+            'endpoint': sub.endpoint,
+            'keys': {
+                'p256dh': sub.p256dh,
+                'auth': sub.auth,
+            },
+        }
+        try:
+            webpush(
+                subscription_info=subscription_info,
+                data=payload,
+                vapid_private_key=pem_key,
+                vapid_claims={'sub': settings.VAPID_ADMIN_EMAIL},
+            )
+        except WebPushException as e:
+            # Subscription expired or invalid — remove it
+            if hasattr(e, 'response') and e.response is not None and e.response.status_code in (404, 410):
+                sub.delete()
+        except Exception:
+            pass
