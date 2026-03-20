@@ -125,10 +125,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Request browser notification permission
-    if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
-    }
 
     // Fetch on load and poll every 60s
     fetchNotifications();

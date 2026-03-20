@@ -36,6 +36,9 @@
     {% endif %}
 
     {% block extra_scripts %}{% endblock %}
+    {% if user.is_authenticated %}
+    <script src="{% static 'js/push.js' %}"></script>
+    {% endif %}
     <script>
         // Auto-dismiss toasts
         document.querySelectorAll('.alert-toast').forEach(t => setTimeout(() => t.remove(), 5000));
