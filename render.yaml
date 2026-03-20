@@ -25,6 +25,12 @@ services:
         value: "3.11.11"
       - key: HUGGINGFACE_API_TOKEN
         sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_ADMIN_EMAIL
+        value: "mailto:denis@heracles.health"
       - key: RENDER_EXTERNAL_HOSTNAME
         fromService:
           name: health-coach-web
