@@ -5,6 +5,13 @@ databases:
     region: frankfurt
 
 services:
+  - type: redis
+    name: health-coach-redis
+    plan: free
+    region: frankfurt
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
   - type: web
     name: health-coach-web
     runtime: python
@@ -21,6 +28,11 @@ services:
         fromDatabase:
           name: health-coach-db
           property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: health-coach-redis
+          type: redis
+          property: connectionString
       - key: PYTHON_VERSION
         value: "3.11.11"
       - key: HUGGINGFACE_API_TOKEN
@@ -30,7 +42,7 @@ services:
       - key: VAPID_PRIVATE_KEY
         sync: false
       - key: VAPID_ADMIN_EMAIL
-        value: "denis@heracles.health"
+        value: "mailto:denis@heracles.health"
       - key: RENDER_EXTERNAL_HOSTNAME
         fromService:
           name: health-coach-web
@@ -52,7 +64,10 @@ services:
           name: health-coach-db
           property: connectionString
       - key: REDIS_URL
-        sync: false
+        fromService:
+          name: health-coach-redis
+          type: redis
+          property: connectionString
       - key: HUGGINGFACE_API_TOKEN
         sync: false
 
